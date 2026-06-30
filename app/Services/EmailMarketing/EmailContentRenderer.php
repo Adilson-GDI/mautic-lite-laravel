@@ -13,7 +13,7 @@ class EmailContentRenderer
         $openPixelUrl = route('email-marketing.track.open', $message->tracking_token);
 
         $html = $this->rewriteLinks($message->html_body, $message);
-        $html .= '<img src="'.$openPixelUrl.'" alt="" width="1" height="1" style="display:none">';
+        $html .= '<img src="'.$openPixelUrl.'?m='.$message->id.'" alt="" width="1" height="1" style="width:1px;height:1px;border:0;opacity:0;display:block">';
         $html .= '<p style="font-size:12px;color:#667085">Se nao quiser receber estes e-mails, ';
         $html .= '<a href="'.$unsubscribeUrl.'">descadastre-se aqui</a>.</p>';
 
