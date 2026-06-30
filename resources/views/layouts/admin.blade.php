@@ -35,10 +35,28 @@
         th{background:#f8f9fc;color:#4e73df;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;font-weight:800}
         tr:last-child td{border-bottom:0}
         tbody tr:hover{background:#f8f9fc}
-        input,select,textarea{display:block;width:100%;height:auto;padding:.65rem .75rem;border:1px solid #d1d3e2;border-radius:.35rem;color:#6e707e;background:#fff}
-        textarea{min-height:160px}
+        input,select,textarea{display:block;width:100%;height:auto;padding:.72rem .85rem;border:1px solid #d1d3e2;border-radius:.45rem;color:#5a5c69;background:#fff;transition:border-color .15s ease,box-shadow .15s ease}
+        input:focus,select:focus,textarea:focus{border-color:#bac8f3;box-shadow:0 0 0 .2rem rgba(78,115,223,.14);outline:0}
+        textarea{min-height:160px;resize:vertical}
+        select[multiple]{min-height:220px;padding:.55rem}
         label{font-weight:700;color:#5a5c69}
         .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+        .form-shell{max-width:1120px}
+        .form-card{background:#fff;border:0;border-radius:.65rem;box-shadow:0 .15rem 1.75rem 0 rgba(58,59,69,.12);margin-bottom:1.25rem;overflow:hidden}
+        .form-card-header{padding:1rem 1.25rem;border-bottom:1px solid #e3e6f0;background:#fff}
+        .form-card-header h2{font-size:1rem;font-weight:800;color:#4e73df;margin:0}
+        .form-card-header p{margin:.35rem 0 0;color:#858796;font-size:.88rem}
+        .form-card-body{padding:1.25rem}
+        .form-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:1rem}
+        .form-field{grid-column:span 6}
+        .form-field.full{grid-column:1/-1}
+        .form-field.third{grid-column:span 4}
+        .form-field.quarter{grid-column:span 3}
+        .form-field label,.form-label{display:block;margin-bottom:.4rem;font-size:.78rem;font-weight:800;color:#4a5568;text-transform:uppercase;letter-spacing:.04em}
+        .form-help{display:block;margin-top:.4rem;color:#858796;font-size:.82rem}
+        .form-actions{display:flex;align-items:center;gap:.75rem;margin-top:1.25rem}
+        .switch-line{display:flex;align-items:center;gap:.65rem;padding:.85rem 1rem;border:1px solid #e3e6f0;border-radius:.55rem;background:#f8f9fc;color:#5a5c69;font-weight:800}
+        .switch-line input{width:1rem;height:1rem}
         .alert{border-radius:.35rem}
         .ok{background:#eafaf1;border-color:#c7f0d8;color:#1f7a45}
         .err{background:#fff1f1;border-color:#f5c6cb;color:#9d1c13}
@@ -53,6 +71,7 @@
             .page-head{display:block}
             .page-head .actions{margin-top:1rem}
             .page-head h1{font-size:1.55rem}
+            .form-field,.form-field.third,.form-field.quarter{grid-column:1/-1}
         }
     </style>
 </head>
