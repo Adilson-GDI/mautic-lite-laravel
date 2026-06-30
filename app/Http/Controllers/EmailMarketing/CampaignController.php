@@ -9,6 +9,9 @@ use App\Jobs\EmailMarketing\ProcessPendingEmailMessagesJob;
 use App\Models\EmailMarketing\EmailCampaign;
 use App\Models\EmailMarketing\EmailList;
 use App\Models\EmailMarketing\EmailProvider;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class CampaignController extends Controller
 {
@@ -97,5 +100,27 @@ class CampaignController extends Controller
     {
         ProcessPendingEmailMessagesJob::dispatch();
         return back()->with('status', 'Fila acionada.');
+    }
+
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'image' => ['required', 'image', 'mimes:jpg,jpeg,png,gif,webp', 'max:4096'],
+        ]);
+
+        $directory = public_path('email-images');
+
+        if (! File::exists($directory)) {
+            File::makeDirectory($directory, 0755, true);
+        }
+
+        $image = $request->file('image');
+        $filename = Str::uuid().'.'.$image->getClientOriginalExtension();
+
+        $image->move($directory, $filename);
+
+        return response()->json([
+            'url' => asset('email-images/'.$filename),
+        ]);
     }
 }

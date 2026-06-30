@@ -23,6 +23,7 @@ Route::prefix('admin/email')->name('email-marketing.')->group(function () {
     Route::resource('contacts', ContactController::class)->except('show');
     Route::post('contacts/import', [ContactController::class, 'import'])->name('contacts.import');
     Route::resource('lists', ListController::class)->except('show');
+    Route::post('campaigns/upload-image', [CampaignController::class, 'uploadImage'])->name('campaigns.upload-image');
     Route::resource('campaigns', CampaignController::class);
     Route::post('campaigns/{campaign}/start', [CampaignController::class, 'start'])->name('campaigns.start');
     Route::post('campaigns/{campaign}/pause', [CampaignController::class, 'pause'])->name('campaigns.pause');
