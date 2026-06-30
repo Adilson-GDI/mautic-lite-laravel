@@ -1,0 +1,1 @@
+{{ $emailMessage->text_body }}

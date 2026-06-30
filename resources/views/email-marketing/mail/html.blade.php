@@ -1,0 +1,1 @@
+{!! $emailMessage->html_body !!}
