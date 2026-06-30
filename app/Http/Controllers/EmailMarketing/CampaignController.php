@@ -7,6 +7,7 @@ use App\Http\Requests\EmailMarketing\EmailCampaignRequest;
 use App\Jobs\EmailMarketing\GenerateCampaignMessagesJob;
 use App\Jobs\EmailMarketing\ProcessPendingEmailMessagesJob;
 use App\Models\EmailMarketing\EmailCampaign;
+use App\Models\EmailMarketing\EmailEvent;
 use App\Models\EmailMarketing\EmailList;
 use App\Models\EmailMarketing\EmailProvider;
 use Illuminate\Http\Request;
@@ -50,6 +51,52 @@ class CampaignController extends Controller
             'openRate' => round((((int) ($stats['opened'] ?? 0) + (int) ($stats['clicked'] ?? 0)) / $total) * 100, 2),
             'clickRate' => round(((int) ($stats['clicked'] ?? 0) / $total) * 100, 2),
             'errorRate' => round(((int) ($stats['failed'] ?? 0) / $total) * 100, 2),
+        ]);
+    }
+
+    public function report(EmailCampaign $campaign)
+    {
+        $campaign->load('provider', 'lists');
+
+        $stats = $campaign->messages()
+            ->selectRaw('status, count(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        $eventStats = EmailEvent::whereHas('message', fn ($query) => $query->where('campaign_id', $campaign->id))
+            ->selectRaw('event_type, count(*) as total')
+            ->groupBy('event_type')
+            ->pluck('total', 'event_type');
+
+        $total = max(1, (int) $campaign->messages()->count());
+        $sent = (int) $campaign->messages()->whereIn('status', ['sent', 'opened', 'clicked', 'delivered'])->count();
+        $opened = (int) (($eventStats['opened'] ?? 0));
+        $clicked = (int) (($eventStats['clicked'] ?? 0));
+
+        return view('email-marketing.campaigns.report', [
+            'campaign' => $campaign,
+            'stats' => $stats,
+            'eventStats' => $eventStats,
+            'total' => $total,
+            'sent' => $sent,
+            'openRate' => round(($opened / $total) * 100, 2),
+            'clickRate' => round(($clicked / $total) * 100, 2),
+            'topLinks' => EmailEvent::whereHas('message', fn ($query) => $query->where('campaign_id', $campaign->id))
+                ->where('event_type', 'clicked')
+                ->whereNotNull('url')
+                ->selectRaw('url, count(*) as total')
+                ->groupBy('url')
+                ->orderByDesc('total')
+                ->limit(10)
+                ->get(),
+            'events' => EmailEvent::with('message.contact')
+                ->whereHas('message', fn ($query) => $query->where('campaign_id', $campaign->id))
+                ->latest('created_at')
+                ->paginate(20),
+            'messages' => $campaign->messages()
+                ->with('contact')
+                ->latest()
+                ->paginate(20, ['*'], 'messages_page'),
         ]);
     }
 

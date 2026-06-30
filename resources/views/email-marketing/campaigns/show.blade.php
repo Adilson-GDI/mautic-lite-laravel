@@ -6,6 +6,7 @@
         <p>Provedor: {{ $campaign->provider->name }} | Status: {{ $campaign->status }} | Listas: {{ $campaign->lists->pluck('name')->join(', ') }}</p>
     </div>
     <div class="actions">
+        <a class="btn" href="{{ route('email-marketing.campaigns.report',$campaign) }}">Relatorio</a>
         <a class="btn secondary" href="{{ route('email-marketing.campaigns.edit',$campaign) }}">Editar</a>
         <form method="post" action="{{ route('email-marketing.campaigns.start',$campaign) }}">@csrf<button class="btn">Iniciar</button></form>
         <form method="post" action="{{ route('email-marketing.campaigns.pause',$campaign) }}">@csrf<button class="btn secondary">Pausar</button></form>
